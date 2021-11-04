@@ -1,6 +1,3 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-
 // Firebase related
 
 import { auth } from "../app/firebaseApp";

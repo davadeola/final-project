@@ -8,7 +8,6 @@ export const Content = () => {
         <p className="lead">
           Click on the ‘Upload’ button to sort your images using A.I
         </p>
-        <UploadImage />
       </section>
 
       <section className="row section">

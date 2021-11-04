@@ -1,9 +1,13 @@
 export default function UploadImage() {
   return (
-    <div>
-      <button className="btn btn-primary" type="button">
-        Upload Images
-      </button>
-    </div>
+    <>
+      <input
+        ref="fileInput"
+        type="file"
+        style={{ display: "none" }}
+        // multiple={false}
+      />
+      <button>Upload File</button>
+    </>
   );
 }
