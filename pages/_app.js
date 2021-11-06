@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import Head from "next/head";
 import "bootstrap/dist/css/bootstrap.min.css";
 //import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import AppContext from "../app/AppContext";
 
 import SideBar from "../components/SideBar";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
@@ -10,7 +11,7 @@ config.autoAddCss = false;
 
 function MyApp({ Component, pageProps }) {
   return (
-    <>
+    <AppContext.Provider>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script
@@ -23,7 +24,7 @@ function MyApp({ Component, pageProps }) {
         <SideBar />
         <Component {...pageProps} />
       </div>
-    </>
+    </AppContext.Provider>
   );
 }
 

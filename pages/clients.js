@@ -1,5 +1,6 @@
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
+import ClientCard from "../components/ClientCard";
 
 export default function Clients() {
   return (
@@ -16,6 +17,9 @@ export default function Clients() {
             </button>
           </Link>
         </div>
+      </section>
+      <section className="row">
+        <ClientCard />
       </section>
     </div>
   );

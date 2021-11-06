@@ -24,14 +24,14 @@ export default function Sidebar() {
             </a>
           </Link>
         </li>
-        <li>
+        {/* <li>
           <Link href="#">
             <a className="nav-link py-3 ">
               <FontAwesomeIcon icon={faImages}></FontAwesomeIcon>
               <p>Photos</p>
             </a>
           </Link>
-        </li>
+        </li> */}
         <li>
           <Link href="/clients">
             <a className="nav-link py-3 ">
@@ -41,18 +41,12 @@ export default function Sidebar() {
           </Link>
         </li>
         <li>
-          <Link href="#">
+          <Link href="/albums">
             <a className="nav-link py-3 ">
               <FontAwesomeIcon icon={faFolderOpen}></FontAwesomeIcon>
               <p>Albums</p>
             </a>
           </Link>
-        </li>
-        <li>
-          <a href="#" className="nav-link py-3 ">
-            <FontAwesomeIcon icon={faCog}></FontAwesomeIcon>
-            <p>Settings</p>
-          </a>
         </li>
       </ul>
     </div>

@@ -8,4 +8,4 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-export { firebase, auth, provide };
+export { firebase, auth, provider };
