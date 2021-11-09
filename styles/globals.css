@@ -44,3 +44,18 @@ a {
 .nav-link:hover .fa {
   transform: rotate(360deg);
 }
+
+.btn-label {
+  position: relative;
+  left: -12px;
+  display: inline-block;
+}
+
+.btn-labeled {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.btn {
+  margin-bottom: 10px;
+}
