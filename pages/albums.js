@@ -12,12 +12,23 @@ export default function Albums() {
         </div>
       </section>
       <div className="">
-        <div className="d-flex flex-row bd-highlight mb-3">
+        <div className="d-flex flex-row bd-highlight mb-3 flex-wrap">
           <div className="p-2 bd-highlight">
-            <CategoryCard />
+            <CategoryCard name="Sports Photography" link="sports" />
           </div>
-          <div className="p-2 bd-highlight">Flex item 2</div>
-          <div className="p-2 bd-highlight">Flex item 3</div>
+          <div className="p-2 bd-highlight">
+            <CategoryCard name="Portrait Photography" link="sports" />
+          </div>
+          <div className="p-2 bd-highlight">
+            <CategoryCard name="Wedding Photography" link="sports" />
+          </div>
+          <div className="p-2 bd-highlight">
+            <CategoryCard
+              img="/images/wedding.png"
+              name="Family Photography"
+              link="family"
+            />
+          </div>
         </div>
       </div>
     </div>
