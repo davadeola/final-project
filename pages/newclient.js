@@ -10,9 +10,7 @@ export default function Home() {
       <div className="row">
         <div class="col-md-4"></div>
         <div class="col-md-8">
-          <form>
-            <NewClientForm />
-          </form>
+          <NewClientForm />
         </div>
       </div>
     </div>

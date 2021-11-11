@@ -1,6 +1,12 @@
+import { useForm } from "react-hook-form";
+
 export default function NewClientForm() {
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = () => {};
+
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div class="mb-3">
         <label htmlFor="new_name" className="form-label">
           Full Name
@@ -10,6 +16,7 @@ export default function NewClientForm() {
           className="form-control"
           id="new_name"
           placeholder="John Doe"
+          {...register("name")}
         />
       </div>
       <div class="mb-3">
@@ -21,6 +28,7 @@ export default function NewClientForm() {
           className="form-control"
           id="new_email"
           placeholder="name@example.com"
+          {...register("emailAddress")}
         />
       </div>
       <div class="mb-3">
@@ -29,10 +37,14 @@ export default function NewClientForm() {
         </label>
         <textarea
           className="form-control"
-          id="exampleFormControlTextarea1"
+          id="description"
+          {...register("description")}
           rows="3"
         ></textarea>
       </div>
-    </>
+      <button className="btn btn-primary" type="submit">
+        Add Client
+      </button>
+    </form>
   );
 }
