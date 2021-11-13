@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import { useRouter } from "next/router";
 
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -14,10 +14,11 @@ const GoogleSignIn = () => {
 
     try {
       await signInWithPopup(auth, provider);
+
       Router.push("/");
     } catch (error) {
       console.log("error");
-      alert(error);
+      console.log(error);
     }
   }, [Router]);
   return (

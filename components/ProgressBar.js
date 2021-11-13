@@ -1,13 +1,12 @@
 import React from "react";
 
-export default function ProgressBar() {
+export default function ProgressBar({ progress }) {
   return (
-    <div className="progress">
+    <div className="progress flex-fill">
       <div
         className="progress-bar bg-success"
         role="progressbar"
-        style={{ width: "25%" }}
-        aria-valuenow="25"
+        style={{ width: `${progress}%` }}
         aria-valuemin="0"
         aria-valuemax="100"
       ></div>

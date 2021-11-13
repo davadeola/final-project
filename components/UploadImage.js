@@ -1,35 +1,48 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import ProgressBar from "./ProgressBar";
+
+import { ref } from "firebase/storage";
+import { storage } from "../firebase/clientApp";
 
 const containerStyle = {
   flex: 1,
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  padding: "10em",
+  padding: "5em",
   borderWidth: 2,
   borderRadius: 2,
-  borderColor: "#eeeeee",
+  borderColor: "#000",
   borderStyle: "dashed",
   backgroundColor: "#fafafa",
-  color: "#bdbdbd",
+  color: "#000",
   outline: "none",
   transition: "border .24s ease-in-out",
 };
 
-export default function UploadImage() {
-  //setting local state
-  const [files, setFiles] = useState([]);
+export default function UploadImage({ setFiles, files, multiple }) {
   const [modal, setModal] = useState(false);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     maxSize: 25000000,
     accept: "image/*",
-    multiple: true,
+    multiple: multiple,
     onDrop: (acceptedFiles) => {
-      setFiles(acceptedFiles.map((file) => Object.assign(file)));
-      setModal(true);
+      if (acceptedFiles.length > 0) {
+        const newImages = Array.from(acceptedFiles).map((file) => {
+          return {
+            file: file,
+            fileName: file.name,
+            status: "CREATED",
+            storageRef: ref(storage, file.name),
+            downloadURL: "",
+            description: "",
+          };
+        });
+
+        setFiles((prevState) => [...prevState, ...newImages]);
+        //setModal(true);
+      }
     },
   });
 
@@ -68,16 +81,16 @@ export default function UploadImage() {
 
   return (
     <>
-      <div style={containerStyle} {...getRootProps()}>
-        <input {...getInputProps()} />
-        {!modal && isDragActive ? (
-          <p>Drop the files here ...</p>
-        ) : (
-          <p>Drag 'n' drop some files here, or click to select files</p>
-        )}
-      </div>
-      {files.length > 0 && <ProgressBar />}
-      {modal && <Modal />}
+      {files.length == 0 && (
+        <div style={containerStyle} {...getRootProps()}>
+          <input {...getInputProps()} />
+          {files.length <= 0 && isDragActive ? (
+            <p>Drop the files here ...</p>
+          ) : (
+            <p>Drag 'n' drop some files here, or click to select files</p>
+          )}
+        </div>
+      )}
     </>
   );
 }

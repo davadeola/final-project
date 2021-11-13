@@ -12,7 +12,7 @@ function EventSelection() {
       >
         Dropdown button
       </button>
-      <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+      <ul className="dropdown-menu" aria-labelledBy="dropdownMenuButton1">
         <li>
           <a className="dropdown-item" href="#">
             Action
