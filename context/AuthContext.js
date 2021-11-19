@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from "react"
-import { auth } from "../firebase/clientApp"
-import { onAuthStateChanged } from "firebase/auth"
+import React, { useEffect, useState } from "react";
+import { auth } from "../firebase/clientApp";
+import { onAuthStateChanged } from "firebase/auth";
 
-export const AuthContext = React.createContext()
+export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const [userData, setUserData] = useState({
     userProviderId: "",
     userId: "",
     userName: "",
     userEmail: "",
     userPhotoLink: "",
-  })
+  });
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -24,19 +25,19 @@ export const AuthProvider = ({ children }) => {
           userName: user.displayName,
           userEmail: user.email,
           userPhotoLink: user.photoURL,
-        }
+        };
 
-        setUserData(requiredData)
-        setCurrentUser(user)
+        setUserData(requiredData);
+        setCurrentUser(user);
       } else {
-        setCurrentUser(null)
+        setCurrentUser(null);
       }
-      setLoading(false)
-    })
-  }, [])
+      setLoading(false);
+    });
+  }, []);
 
   if (loading) {
-    return <>Loading...</>
+    return <>Loading...</>;
   }
 
   return (
@@ -48,5 +49,5 @@ export const AuthProvider = ({ children }) => {
     >
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};

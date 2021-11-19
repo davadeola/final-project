@@ -1,4 +1,4 @@
-export default function ClientCard() {
+export default function ClientCard({ client }) {
   return (
     <div className="card" style={{ width: "40rem" }}>
       <div className="row">
@@ -7,7 +7,7 @@ export default function ClientCard() {
         </div>
         <div className="col-md-10">
           <div className="card-body">
-            <h5 className="card-title">Jack Reacher</h5>
+            <h5 className="card-title">{client.name}</h5>
           </div>
         </div>
       </div>
