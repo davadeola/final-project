@@ -2,11 +2,14 @@ import UploadImage from "./UploadImage";
 import ProgressBar from "./ProgressBar";
 import { useState, useEffect, useContext } from "react";
 
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage, db } from "../firebase/clientApp";
 
 import { AuthContext } from "../context/AuthContext";
+
+//tensorflow
+import * as tf from "@tensorflow/tfjs";
 
 export const Content = () => {
   const AuthCtx = useContext(AuthContext);
@@ -20,6 +23,28 @@ export const Content = () => {
     const newArray = [...files];
     newArray[index][parameter] = value;
     setFiles(newArray);
+  };
+
+  const handleCategory = async (src) => {
+    const model = await tf.loadGraphModel("/tfjs/model.json");
+    var img = new Image();
+    img.width = 200;
+    img.height = 200;
+    img.src = src;
+
+    const example = tf.browser.fromPixels(img);
+    const newImage = tf.cast(
+      tf.image.resizeBilinear(example, [200, 200]),
+      "float32"
+    );
+    const norm = tf.fill([200, 200, 3], 255);
+    const normalisedImage = tf.div(newImage, norm);
+    const predictme = tf.cast(tf.expandDims(normalisedImage), "float32");
+    const prediction = model.predict(predictme);
+    const classificationData = await prediction.data();
+    const classificationName = classificationData[0];
+    console.log(classificationData);
+    console.log(classificationName - 0.5 * 2 * 100);
   };
 
   useEffect(() => {
@@ -49,6 +74,7 @@ export const Content = () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             changeImageField(index, "downloadURL", downloadURL);
             changeImageField(index, "status", "FINISH");
+            handleCategory(downloadURL);
           });
         }
       );
