@@ -81,16 +81,16 @@ export default function UploadImage({ setFiles, files, multiple }) {
 
   return (
     <>
-      {files.length == 0 && (
-        <div style={containerStyle} {...getRootProps()}>
-          <input {...getInputProps()} />
-          {files.length <= 0 && isDragActive ? (
-            <p>Drop the files here ...</p>
-          ) : (
-            <p>Drag 'n' drop some files here, or click to select files</p>
-          )}
-        </div>
-      )}
+      (
+      <div style={containerStyle} {...getRootProps()}>
+        <input {...getInputProps()} />
+        {files.length <= 0 && isDragActive ? (
+          <p>Drop the files here ...</p>
+        ) : (
+          <p>Drag 'n' drop some files here, or click to select files</p>
+        )}
+      </div>
+      )
     </>
   );
 }
