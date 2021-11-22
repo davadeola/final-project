@@ -7,6 +7,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage, db } from "../firebase/clientApp";
 
 import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
 
 //tensorflow
 import * as tf from "@tensorflow/tfjs";
@@ -25,26 +26,20 @@ export const Content = () => {
     setFiles(newArray);
   };
 
-  const handleCategory = async (src) => {
-    const model = await tf.loadGraphModel("/tfjs/model.json");
-    var img = new Image();
-    img.width = 200;
-    img.height = 200;
-    img.src = src;
+  const baseURL =
+    "https://southcentralus.api.cognitive.microsoft.com/customvision/v3.0/Prediction/68a42beb-9682-4929-9edb-6b7a9c690db9/classify/iterations/Iteration3/url";
 
-    const example = tf.browser.fromPixels(img);
-    const newImage = tf.cast(
-      tf.image.resizeBilinear(example, [200, 200]),
-      "float32"
-    );
-    const norm = tf.fill([200, 200, 3], 255);
-    const normalisedImage = tf.div(newImage, norm);
-    const predictme = tf.cast(tf.expandDims(normalisedImage), "float32");
-    const prediction = model.predict(predictme);
-    const classificationData = await prediction.data();
-    const classificationName = classificationData[0];
-    console.log(classificationData);
-    console.log(classificationName - 0.5 * 2 * 100);
+  const headers = {
+    "Prediction-Key": "356c46ca41ab44a69579e74ae6ebfbea",
+    "Content-Type": "application/json",
+  };
+
+  const handleCategory = (imageUrl) => {
+    let data = { Url: imageUrl };
+
+    axios.post(baseURL, data, { headers: headers }).then((res) => {
+      console.log(res);
+    });
   };
 
   useEffect(() => {
