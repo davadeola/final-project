@@ -71,6 +71,7 @@ export const Content = () => {
                 fileName: image.fileName,
                 client: "",
                 category: res,
+                fileUrl: downloadURL,
               });
             });
           });

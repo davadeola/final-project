@@ -20,7 +20,7 @@ export default function Home() {
   }, []);
   return (
     <AuthRoute>
-      <div className={styles.container}>
+      <div className={`container ${styles.container}`}>
         <Content />
       </div>
     </AuthRoute>

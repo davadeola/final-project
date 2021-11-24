@@ -6,7 +6,12 @@ export default function ClientCard({ client }) {
           <img
             src={client.profilePhoto}
             className="img"
-            style={{ width: "5em", height: "5em", objectFit: "cover" }}
+            style={{
+              width: "5em",
+              height: "5em",
+              objectFit: "cover",
+              borderRadius: "50%",
+            }}
           />
         </div>
         <div className="col-md-10">

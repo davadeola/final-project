@@ -13,7 +13,7 @@ export default function Sidebar() {
   return (
     <div
       className="d-flex flex-column flex-shrink-0 bg-light vh-100"
-      style={{ width: "6.5vw", justifyContent: "center" }}
+      style={{ width: "6.5vw", justifyContent: "center", position: "fixed" }}
     >
       <ul className="nav nav-pills nav-flush flex-column text-center">
         <li className="nav-item">
