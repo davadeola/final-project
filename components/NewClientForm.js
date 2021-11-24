@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import UploadImage from "./UploadImage";
 
 //firebase store
@@ -13,8 +13,15 @@ import { AuthContext } from "../context/AuthContext";
 export default function NewClientForm() {
   //setting local state
   const [files, setFiles] = useState([]);
+  useEffect(
+    () => () => {
+      // Make sure to revoke the data uris to avoid memory leaks
+      files.forEach((file) => URL.revokeObjectURL(file.preview));
+    },
+    [files]
+  );
+
   const { register, handleSubmit } = useForm();
-  const [uploadComplete, setUploadComplete] = useState(false);
 
   const AuthCtx = useContext(AuthContext);
   const currentUser = AuthCtx.currentUser;
@@ -42,14 +49,12 @@ export default function NewClientForm() {
         console.log("Error Image Upload:", err);
       },
       () => {
-        updateDoc(doc(db, `clients`, emailAddress), {
-          profilePhoto: image.fileName,
-        });
-
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           changeImageField(index, "downloadURL", downloadURL);
           changeImageField(index, "status", "FINISH");
-          setUploadComplete(true);
+          updateDoc(doc(db, `clients`, emailAddress), {
+            profilePhoto: downloadURL,
+          });
         });
       }
     );
@@ -68,14 +73,17 @@ export default function NewClientForm() {
 
   return (
     <>
-      <div class="col-md-4">
-        {uploadComplete ? (
-          <img src={files[0].downloadURL} style={{ width: "100%" }} />
+      <div className="col-md-4">
+        {files.length > 0 ? (
+          <img
+            src={files[0].preview}
+            style={{ width: "20em", height: "20em", objectFit: "cover" }}
+          />
         ) : (
           <UploadImage files={files} multiple={false} setFiles={setFiles} />
         )}
       </div>
-      <div class="col-md-8">
+      <div className="col-md-8">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
             <label htmlFor="new_name" className="form-label">

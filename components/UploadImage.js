@@ -37,6 +37,7 @@ export default function UploadImage({ setFiles, files, multiple }) {
             storageRef: ref(storage, file.name),
             downloadURL: "",
             description: "",
+            preview: URL.createObjectURL(file),
           };
         });
 
