@@ -35,10 +35,12 @@ export const Content = () => {
   };
 
   const handleCategory = (imageUrl) => {
+    let prediction;
     let data = { Url: imageUrl };
 
-    axios.post(baseURL, data, { headers: headers }).then((res) => {
-      console.log(res);
+    return axios.post(baseURL, data, { headers: headers }).then((res) => {
+      prediction = res.data.predictions[0].tagName;
+      return prediction;
     });
   };
 
@@ -60,16 +62,17 @@ export const Content = () => {
           console.log("Error Image Upload:", err);
         },
         () => {
-          setDoc(doc(db, `photos`, image.fileName), {
-            photographer: AuthCtx.currentUser.email,
-            fileName: image.fileName,
-            client: "",
-          });
-
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             changeImageField(index, "downloadURL", downloadURL);
             changeImageField(index, "status", "FINISH");
-            handleCategory(downloadURL);
+            handleCategory(downloadURL).then((res) => {
+              setDoc(doc(db, `photos`, image.fileName), {
+                photographer: AuthCtx.currentUser.email,
+                fileName: image.fileName,
+                client: "",
+                category: res,
+              });
+            });
           });
         }
       );
@@ -86,23 +89,14 @@ export const Content = () => {
         <UploadImage setFiles={setFiles} files={files} multiple={true} />
         {files.length > 0 && (
           <div style={{ paddingTop: "3.5em" }}>
-            {files.map((file) => (
-              <div key={file.fileName} className="d-flex flex-column mb-3">
+            {files.map((file, i) => (
+              <div key={i} className="d-flex flex-column mb-3">
                 <p>{file.fileName}</p>
                 <ProgressBar progress={file.progress} />
               </div>
             ))}
           </div>
         )}
-      </section>
-
-      <section className="row section">
-        <div className="col-md-6">
-          <h3>Recent Clients</h3>
-        </div>
-        <div className="col-md-6">
-          <h3>Portfolio</h3>
-        </div>
       </section>
     </div>
   );

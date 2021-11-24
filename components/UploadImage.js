@@ -40,8 +40,9 @@ export default function UploadImage({ setFiles, files, multiple }) {
           };
         });
 
-        setFiles((prevState) => [...prevState, ...newImages]);
+        //setFiles((prevState) => [...prevState, ...newImages]);
         //setModal(true);
+        setFiles(newImages);
       }
     },
   });
