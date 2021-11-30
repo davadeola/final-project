@@ -12,7 +12,7 @@ import ClientList from "../components/ClientList";
 
 export default function Clients() {
   const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState("");
+  const [photos, setPhotos] = useState([]);
 
   const AuthCtx = useContext(AuthContext);
   const currentUser = AuthCtx.currentUser;
@@ -33,8 +33,25 @@ export default function Clients() {
     }
   };
 
+  const getPhotos = async () => {
+    if (currentUser != null) {
+      const q = query(
+        collection(db, "photos"),
+        where("photographer", "==", currentUser.email)
+      );
+
+      const querySnapshot = await getDocs(q);
+      let arr = [];
+      querySnapshot.forEach((doc) => {
+        arr.push(doc.data());
+      });
+      setPhotos(arr);
+    }
+  };
+
   useEffect(() => {
     getClients();
+    getPhotos();
   }, []);
 
   return (

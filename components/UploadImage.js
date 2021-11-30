@@ -20,7 +20,7 @@ const containerStyle = {
   transition: "border .24s ease-in-out",
 };
 
-export default function UploadImage({ setFiles, files, multiple }) {
+export default function UploadImage({ setFiles, files, multiple, setUpload }) {
   const [modal, setModal] = useState(false);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -44,6 +44,7 @@ export default function UploadImage({ setFiles, files, multiple }) {
         //setFiles((prevState) => [...prevState, ...newImages]);
         //setModal(true);
         setFiles(newImages);
+        setUpload(true);
       }
     },
   });
