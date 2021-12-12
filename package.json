@@ -29,6 +29,7 @@
     "react-dropzone": "^11.4.2",
     "react-firebase-hooks": "^3.0.4",
     "react-hook-form": "^7.19.3",
+    "react-modal": "^3.14.4",
     "react-responsive-masonry": "^2.1.4"
   },
   "devDependencies": {

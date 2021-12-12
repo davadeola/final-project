@@ -32,6 +32,15 @@ a {
   flex-direction: column;
 }
 
+.back-link {
+  border-radius: 0px !important;
+  transition: all 0.5s;
+  width: 2em;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+}
+
 .nav-link:hover {
   background-color: #ffffff40 !important;
 }
@@ -39,6 +48,37 @@ a {
 .nav-link .svg-inline--fa {
   transition: all 1s;
   font-size: 20px;
+}
+
+.my-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 30em;
+  width: 70%;
+  border: 1px solid #ccc;
+  background: #fff;
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
+  padding: 20px;
+  display: flex;
+  align-items: start;
+  justify-content: start;
+}
+
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 500ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
 }
 
 .nav-link:hover .fa {

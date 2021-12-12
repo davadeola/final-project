@@ -4,23 +4,24 @@ import { useDropzone } from "react-dropzone";
 import { ref } from "firebase/storage";
 import { storage } from "../firebase/clientApp";
 
-const containerStyle = {
-  flex: 1,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  padding: "5em",
-  borderWidth: 2,
-  borderRadius: 2,
-  borderColor: "#000",
-  borderStyle: "dashed",
-  backgroundColor: "#fafafa",
-  color: "#000",
-  outline: "none",
-  transition: "border .24s ease-in-out",
-};
-
 export default function UploadImage({ setFiles, files, multiple, setUpload }) {
+  //styles
+  const containerStyle = {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "4.5em",
+    borderWidth: 10,
+    borderRadius: 2,
+    width: "22em",
+    marginBottom: "2.5em",
+    backgroundColor: "#fafafa",
+    color: "#000",
+    outline: "none",
+    transition: "border .24s ease-in-out",
+  };
+
   const [modal, setModal] = useState(false);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -84,16 +85,17 @@ export default function UploadImage({ setFiles, files, multiple, setUpload }) {
 
   return (
     <>
-      (
       <div style={containerStyle} {...getRootProps()}>
         <input {...getInputProps()} />
         {files.length <= 0 && isDragActive ? (
           <p>Drop the files here ...</p>
         ) : (
-          <p>Drag 'n' drop some files here, or click to select files</p>
+          <>
+            <p>Drag 'n' drop some files here, or click to select files</p>
+            <button className="btn btn-primary">Upload Images</button>
+          </>
         )}
       </div>
-      )
     </>
   );
 }

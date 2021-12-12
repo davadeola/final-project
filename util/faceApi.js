@@ -17,11 +17,10 @@ loadFaceLandmarkModel(MODEL_URL);
 loadFaceRecognitionModel(MODEL_URL);
 loadFaceExpressionModel(MODEL_URL);
 
-const loadImage = (client) => {
+const loadImage = (img) => {
   const image = new Image();
   image.crossOrigin = true;
-  image.src = client.profilePhoto;
-  image.alt = client.name;
+  image.src = img;
 
   return image;
 };
@@ -33,15 +32,24 @@ const findNewFaces = async (images) => {
     .withFaceDescriptors();
 
   console.log(faceDescriptions);
+};
 
-  // let faces = []
+const verifyClientFace = async (imageUrl) => {
+  let verified = false;
 
-  // images.forEach(async (image) => {
-  //   let clientPic = await fetchImage(image.downloadUrl);
-  //   let faceDescriptions = await detectAllFaces(clientPic)
-  //     .withFaceLandmarks()
-  //     .withFaceDescriptors();
-  // });
+  const img = await fetchImage(imageUrl);
+
+  const clientFaceDescription = await detectSingleFace(img)
+    .withFaceLandmarks()
+    .withFaceDescriptor();
+  if (!clientFaceDescription) {
+    console.log(`no faces detected`);
+  } else {
+    verified = true;
+  }
+
+  console.log(verified);
+  return verified;
 };
 
 //for each image, this is called
@@ -77,13 +85,13 @@ const findMatchedFaces = async (clients, imageUrl) => {
     faceMatcher.findBestMatch(fd.descriptor)
   );
 
+  let faces = [];
+
   results.forEach((bestMatch, i) => {
-    //console.log(bestMatch.toString());
-    // console.log(faceDescriptions[i].detection);
-    console.log(bestMatch.label);
+    faces.push(bestMatch.label);
   });
+
+  return faces;
 };
 
-const findMatch = (labeledFaceDescriptors) => {};
-
-export { findNewFaces, findMatchedFaces, findMatch };
+export { findNewFaces, findMatchedFaces, verifyClientFace };

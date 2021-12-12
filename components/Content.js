@@ -10,6 +10,7 @@ import {
   query,
   where,
   getDocs,
+  arrayUnion,
 } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage, db } from "../firebase/clientApp";
@@ -18,7 +19,7 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 //tensorflow
-// import * as tf from "@tensorflow/tfjs";
+import * as tf from "@tensorflow/tfjs";
 import { findMatchedFaces, findNewFaces } from "../util/faceApi";
 
 export const Content = () => {
@@ -61,53 +62,53 @@ export const Content = () => {
     "Content-Type": "application/json",
   };
 
-  const handleCategory = (imageUrl) => {
-    let prediction = "";
-    let data = { Url: imageUrl };
+  // const handleCategory = (imageUrl) => {
+  //   let prediction = "";
+  //   let data = { Url: imageUrl };
 
-    return axios.post(baseURL, data, { headers: headers }).then((res) => {
-      if (res.data.predictions[0].probability > 0.65) {
-        prediction = res.data.predictions[0].tagName;
-      }
+  //   return axios.post(baseURL, data, { headers: headers }).then((res) => {
+  //     if (res.data.predictions[0].probability > 0.65) {
+  //       prediction = res.data.predictions[0].tagName;
+  //     }
 
-      return prediction;
-    });
-  };
-
-  // const handleCategory = async (src) => {
-  //   let imgWidth = 224;
-  //   let imgHeight = 224;
-
-  //   // The model is present in public folder, so that it could be downloaded over http/https
-  //   const model = await tf.loadLayersModel("/tfjs/model.json");
-  //   var img = new Image();
-
-  //   img.src = src;
-  //   img.width = 224;
-  //   img.height = 224;
-
-  // const example = tf.browser.fromPixels(img);
-  // const newImage = tf.cast(
-  //   tf.image.resizeBilinear(example, [224, 224]),
-  //   "float32"
-  // );
-  // const norm = tf.fill([224, 224, 1], 255);
-  // const normalisedImage = tf.div(newImage, norm);
-  // const predictme = tf.cast(tf.expandDims(normalisedImage), "float32");
-
-  //   var tensorImg = tf.browser
-  //     .fromPixels(img)
-  //     .resizeNearestNeighbor([imgWidth, imgHeight])
-
-  //     .toFloat()
-  //     .expandDims();
-
-  //   const prediction = model.predict(tensorImg);
-  //   const classificationData = await prediction.dataSync()[0];
-  //   prediction.dispose();
-
-  //   console.log(tensorImg);
+  //     return prediction;
+  //   });
   // };
+
+  const handleCategory = async (src) => {
+    let imgWidth = 300;
+    let imgHeight = 300;
+
+    // The model is present in public folder, so that it could be downloaded over http/https
+    const model = await tf.loadLayersModel("/tfjs/model.json");
+    var img = new Image();
+
+    img.src = src;
+    img.width = imgWidth;
+    img.height = imgHeight;
+
+    const example = tf.browser.fromPixels(img);
+    const newImage = tf.cast(
+      tf.image.resizeBilinear(example, [imgWidth, imgHeight]),
+      "float32"
+    );
+    const norm = tf.fill([imgWidth, imgHeight, 1], 255);
+    const normalisedImage = tf.div(newImage, norm);
+    const predictme = tf.cast(tf.expandDims(normalisedImage), "float32");
+
+    // var tensorImg = tf.browser
+    //   .fromPixels(img)
+    //   .resizeNearestNeighbor([imgWidth, imgHeight])
+    //   .toFloat()
+    //   .expandDims();
+
+    const prediction = model.predict(predictme);
+    const classificationData = await prediction.dataSync();
+    prediction.dispose();
+
+    //console.log(classificationData);
+    console.log(classificationData);
+  };
 
   useEffect(() => {
     files.forEach((image, index) => {
@@ -139,20 +140,33 @@ export const Content = () => {
             changeImageField(index, "downloadURL", downloadURL);
             changeImageField(index, "status", "FINISH");
 
-            handleCategory(downloadURL).then((res) => {
-              setDoc(doc(db, `photos`, image.fileName), {
-                photographer: AuthCtx.currentUser.email,
-                fileName: image.fileName,
-                client: "",
-                category: res,
-                fileUrl: downloadURL,
-              }).then(() => {
-                console.log("Added to Db");
-                console.log("Assigning to client");
-                let client = findMatchedFaces(clients, downloadURL);
-                console.log(client);
-              });
-            });
+            handleCategory(downloadURL);
+
+            // handleCategory(downloadURL).then((res) => {
+            //   setDoc(doc(db, `photos`, image.fileName), {
+            //     photographer: AuthCtx.currentUser.email,
+            //     fileName: image.fileName,
+            //     category: res,
+            //     fileUrl: downloadURL,
+            //   }).then(() => {
+            //     console.log("Added to Db");
+            //     console.log("Assigning to client");
+            //     findMatchedFaces(clients, downloadURL)
+            //       .then((emails) => {
+            //         console.log("entered");
+            //         emails.forEach((email) => {
+            //           updateDoc(doc(db, `photos`, image.fileName), {
+            //             clients: arrayUnion(email),
+            //           }).then(() => {
+            //             console.log("here");
+            //           });
+            //         });
+            //       })
+            //       .catch((err) => {
+            //         console.log(err);
+            //       });
+            //   });
+            // });
           });
         }
       );
@@ -167,18 +181,24 @@ export const Content = () => {
 
   return (
     <div className="container">
-      <section className="row section">
-        <h1>Organize your Amazing moments </h1>
-        <p className="lead">
-          Click on the ‘Upload’ button to sort your images using A.I
-        </p>
-        <UploadImage
-          setFiles={setFiles}
-          files={files}
-          multiple={true}
-          setUpload={setUpload}
-        />
-        {files.length > 0 && (
+      <section className="row section d-flex justify-content-center align-items-center">
+        <div className="col-md-6">
+          <h1>Organize your Amazing Moments</h1>
+          <p className="lead">
+            Upload your images to start sorting them by your client’s faces or
+            the style of photography
+          </p>
+        </div>
+        <div className="col-md-6">
+          <UploadImage
+            setFiles={setFiles}
+            files={files}
+            multiple={true}
+            setUpload={setUpload}
+          />
+        </div>
+
+        {/* {files.length > 0 && (
           <div style={{ paddingTop: "3.5em" }}>
             {files.map((file, i) => (
               <div key={i} className="d-flex flex-column mb-3">
@@ -187,7 +207,7 @@ export const Content = () => {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </section>
     </div>
   );

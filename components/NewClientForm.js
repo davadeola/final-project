@@ -9,10 +9,13 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 //importing context
 import { AuthContext } from "../context/AuthContext";
+import { verifyClientFace } from "../util/faceApi";
 
 export default function NewClientForm() {
   //setting local state
   const [files, setFiles] = useState([]);
+  const [upload, setUpload] = useState(false);
+
   useEffect(
     () => () => {
       // Make sure to revoke the data uris to avoid memory leaks
@@ -36,7 +39,12 @@ export default function NewClientForm() {
     let image = files[0];
     let index = 0;
 
-    if (image.status === "FINISH" || image.status === "UPLOADING") return;
+    if (
+      image.status === "FINISH" ||
+      image.status === "UPLOADING" ||
+      upload == false
+    )
+      return;
     changeImageField(index, "status", "UPLOADING");
 
     const storageRef = ref(storage, image.fileName);
@@ -54,36 +62,53 @@ export default function NewClientForm() {
           changeImageField(index, "status", "FINISH");
           updateDoc(doc(db, `clients`, emailAddress), {
             profilePhoto: downloadURL,
+          }).then(() => {
+            setUpload(false);
           });
         });
       }
     );
   };
 
-  const onSubmit = (data) => {
-    console.log({ ...data, photographer: currentUser.email });
+  const onSubmit = async (data) => {
+    if (files.length > 0) {
+      let verified = await verifyClientFace(files[0].preview);
+      if (verified == true) {
+        console.log({ ...data, photographer: currentUser.email });
 
-    setDoc(doc(db, "clients", data.emailAddress), {
-      ...data,
-      photographer: currentUser.email,
-    });
+        setDoc(doc(db, "clients", data.emailAddress), {
+          ...data,
+          photographer: currentUser.email,
+        });
 
-    submitProfileImage(data.emailAddress);
+        submitProfileImage(data.emailAddress);
+      } else {
+        console.log("Choose a different picture. No face detected");
+      }
+    } else {
+      console.log("Select a picture");
+    }
   };
 
   return (
-    <>
-      <div className="col-md-4">
-        {files.length > 0 ? (
-          <img
-            src={files[0].preview}
-            style={{ width: "20em", height: "20em", objectFit: "cover" }}
-          />
-        ) : (
-          <UploadImage files={files} multiple={false} setFiles={setFiles} />
-        )}
-      </div>
-      <div className="col-md-8">
+    <div style={{ padding: "0 10em 10em" }}>
+      <div className="col-md-12">
+        <div className="text-center">
+          {files.length > 0 ? (
+            <img
+              src={files[0].preview}
+              style={{ width: "20em", height: "20em", objectFit: "cover" }}
+            />
+          ) : (
+            <UploadImage
+              setUpload={setUpload}
+              files={files}
+              multiple={false}
+              setFiles={setFiles}
+            />
+          )}
+        </div>
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
             <label htmlFor="new_name" className="form-label">
@@ -125,6 +150,6 @@ export default function NewClientForm() {
           </button>
         </form>
       </div>
-    </>
+    </div>
   );
 }

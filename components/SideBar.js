@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faSearch,
-  faHome,
   faUsers,
-  faCog,
-  faImages,
   faFolderOpen,
+  faCloudUploadAlt,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Sidebar() {
@@ -19,19 +16,12 @@ export default function Sidebar() {
         <li className="nav-item">
           <Link href="/">
             <a className="nav-link py-3 ">
-              <FontAwesomeIcon icon={faHome}></FontAwesomeIcon>
-              <p>Home</p>
+              <FontAwesomeIcon icon={faCloudUploadAlt}></FontAwesomeIcon>
+              <p>Upload</p>
             </a>
           </Link>
         </li>
-        {/* <li>
-          <Link href="#">
-            <a className="nav-link py-3 ">
-              <FontAwesomeIcon icon={faImages}></FontAwesomeIcon>
-              <p>Photos</p>
-            </a>
-          </Link>
-        </li> */}
+
         <li>
           <Link href="/clients">
             <a className="nav-link py-3 ">
