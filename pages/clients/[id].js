@@ -20,10 +20,12 @@ import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import AlbumRadio from "../../components/AlbumRadio";
 
 function Profile({ photos, clientInfo }) {
   const [selPhoto, setSelPhoto] = useState();
   const [isOpen, toggleOpen] = useState(false);
+  const categories = ["Wedding", "Sports", "Portrait", "Family"];
 
   const onPhotoClick = (photo) => {
     setSelPhoto(photo);
@@ -33,6 +35,11 @@ function Profile({ photos, clientInfo }) {
   const closeModal = () => {
     toggleOpen(false);
   };
+
+  const onChangeValue = (event) => {
+    console.log(event.target.value);
+  };
+
   return (
     <div className={`container ${styles.container}`}>
       <div className="container" style={{ width: "100vw" }}>
@@ -93,11 +100,23 @@ function Profile({ photos, clientInfo }) {
                     </div>
                   </div>
                   <div className="col-md-6" style={{ padding: "2em" }}>
+                    <div className="d-flex flex-column justify-content-between"></div>
                     <p>
                       Shot taken by <b>{selPhoto.photographer}</b>
                     </p>
-                    <h6>{selPhoto.category.toUpperCase()}</h6>
-                    <div className="d-flex  justify-content-start">
+                    <h6>Select a category </h6>
+                    <div onChange={onChangeValue}>
+                      {categories.map((item, i) => (
+                        <AlbumRadio
+                          key={i}
+                          album={item}
+                          index={i}
+                          selCategory={selPhoto.category}
+                        />
+                      ))}
+                    </div>
+
+                    <div className="d-flex  justify-content-end">
                       <FontAwesomeIcon icon={faDownload}></FontAwesomeIcon>
                     </div>
                   </div>

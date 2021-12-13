@@ -1,6 +1,7 @@
 import UploadImage from "./UploadImage";
 import ProgressBar from "./ProgressBar";
 import { useState, useEffect, useContext } from "react";
+import Modal from "react-modal";
 
 import {
   doc,
@@ -30,6 +31,13 @@ export const Content = () => {
   const [files, setFiles] = useState([]);
   const [upload, setUpload] = useState(false);
   const [clients, setClients] = useState([]);
+  const[message, setMessage] = useState();
+  const [isOpen, toggleOpen] = useState(false);
+
+  const closeModal = () => {
+    toggleOpen(false);
+  };
+
 
   const getClients = async () => {
     if (currentUser != null) {

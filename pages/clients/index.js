@@ -10,7 +10,6 @@ import { useState, useContext, useEffect } from "react";
 
 //importing context
 import { AuthContext } from "../../context/AuthContext";
-import ClientList from "../../components/ClientList";
 
 export default function Clients() {
   const [clients, setClients] = useState([]);
