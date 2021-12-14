@@ -10,6 +10,7 @@ import { useState, useContext, useEffect } from "react";
 
 //importing context
 import { AuthContext } from "../../context/AuthContext";
+import AuthRoute from "../../HOC/authRoute";
 
 export default function Clients() {
   const [clients, setClients] = useState([]);
@@ -71,35 +72,39 @@ export default function Clients() {
   }, [selClient]);
 
   return (
-    <div className={`container ${styles.container}`}>
-      <section className="row section">
-        <div className="col-md-9">
-          <h2>Clients</h2>
-          <p className="lead">Select a client to view their assigned images.</p>
-        </div>
-        <div className="col-md-3">
-          <Link href="/newclient">
-            <button className="btn btn-primary" type="button">
-              Add New Client
-            </button>
-          </Link>
-        </div>
-      </section>
-      <section className="d-flex flex-row">
-        {clients.map((client, i) => {
-          return (
-            <Link
-              href="/clients/[id]"
-              as={"/clients/" + client.emailAddress}
-              key={client.emailAddress}
-            >
-              <a>
-                <ClientCard client={client} setSelClient={setSelClient} />
-              </a>
+    <AuthRoute>
+      <div className={`container ${styles.container}`}>
+        <section className="row section">
+          <div className="col-md-9">
+            <h2>Clients</h2>
+            <p className="lead">
+              Select a client to view their assigned images.
+            </p>
+          </div>
+          <div className="col-md-3">
+            <Link href="/newclient">
+              <button className="btn btn-primary" type="button">
+                Add New Client
+              </button>
             </Link>
-          );
-        })}
-      </section>
-    </div>
+          </div>
+        </section>
+        <section className="d-flex flex-row">
+          {clients.map((client, i) => {
+            return (
+              <Link
+                href="/clients/[id]"
+                as={"/clients/" + client.emailAddress}
+                key={client.emailAddress}
+              >
+                <a className="nav-link">
+                  <ClientCard client={client} setSelClient={setSelClient} />
+                </a>
+              </Link>
+            );
+          })}
+        </section>
+      </div>
+    </AuthRoute>
   );
 }

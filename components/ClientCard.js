@@ -31,7 +31,7 @@ export default function ClientCard({ client, setSelClient }) {
           </div>
         </div>
       </div>
-      <div className="row">
+      {/* <div className="row">
         <div className="d-flex flex-row justify-content-evenly">
           <i>
             <FontAwesomeIcon icon={faPen} />
@@ -40,7 +40,7 @@ export default function ClientCard({ client, setSelClient }) {
             <FontAwesomeIcon icon={faTrash} />
           </i>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

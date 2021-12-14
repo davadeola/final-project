@@ -11,19 +11,6 @@ import { AuthContext } from "../context/AuthContext";
 import AuthRoute from "../HOC/authRoute";
 
 export default function Home() {
-  const Router = useRouter();
-  const AuthCtx = useContext(AuthContext);
-
-  useEffect(() => {
-    if (AuthCtx.currentUser != null) {
-      setDoc(doc(db, "photographers", AuthCtx.currentUser.email), {
-        userName: AuthCtx.currentUser.displayName,
-        userPhotoLink: AuthCtx.currentUser.photoURL,
-      });
-    } else {
-      Router.push("/login");
-    }
-  }, []);
   return (
     <AuthRoute>
       <div className={`container ${styles.container}`}>

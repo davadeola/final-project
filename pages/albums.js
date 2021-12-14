@@ -10,6 +10,7 @@ import { useState, useContext, useEffect } from "react";
 
 //importing context
 import { AuthContext } from "../context/AuthContext";
+import AuthRoute from "../HOC/authRoute";
 
 export default function Albums() {
   const [category, setCategory] = useState([]);
@@ -53,63 +54,68 @@ export default function Albums() {
   }, []);
 
   return (
-    <div className={`container ${styles.container}`}>
-      <section className="row section">
-        <div className="col-md-12">
-          <h2>Albums</h2>
-          <p className="lead">Select an Event to view.</p>
-        </div>
-      </section>
+    <AuthRoute>
+      <div className={`container ${styles.container}`}>
+        <section className="row section">
+          <div className="col-md-12">
+            <h2>Albums</h2>
+            <p className="lead">Select an Event to view.</p>
+          </div>
+        </section>
 
-      <div className="row">
-        <div className="col-md-3">
-          <div className="d-flex flex-column bd-highlight mb-3 flex-wrap">
-            <div className="p-2 bd-highlight" onClick={() => changeCategory()}>
-              <CategoryCard name="All" />
-            </div>
-            <div
-              className="p-2 bd-highlight"
-              onClick={() => changeCategory("sports")}
-            >
-              <CategoryCard name="Sports" />
-            </div>
-            <div
-              className="p-2 bd-highlight"
-              onClick={() => changeCategory("portrait")}
-            >
-              <CategoryCard name="Portrait" />
-            </div>
-            <div
-              className="p-2 bd-highlight"
-              onClick={() => changeCategory("wedding")}
-            >
-              <CategoryCard name="Wedding" />
-            </div>
-            <div
-              className="p-2 bd-highlight"
-              onClick={() => changeCategory("family")}
-            >
-              <CategoryCard name="Family" link="family" />
+        <div className="row">
+          <div className="col-md-3">
+            <div className="d-flex flex-column bd-highlight mb-3 flex-wrap">
+              <div
+                className="p-2 bd-highlight"
+                onClick={() => changeCategory()}
+              >
+                <CategoryCard name="All" />
+              </div>
+              <div
+                className="p-2 bd-highlight"
+                onClick={() => changeCategory("sports")}
+              >
+                <CategoryCard name="Sports" />
+              </div>
+              <div
+                className="p-2 bd-highlight"
+                onClick={() => changeCategory("portrait")}
+              >
+                <CategoryCard name="Portrait" />
+              </div>
+              <div
+                className="p-2 bd-highlight"
+                onClick={() => changeCategory("wedding")}
+              >
+                <CategoryCard name="Wedding" />
+              </div>
+              <div
+                className="p-2 bd-highlight"
+                onClick={() => changeCategory("family")}
+              >
+                <CategoryCard name="Family" link="family" />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-md-9">
-          <ResponsiveMasonry
-            columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
-          >
-            <Masonry>
-              {category.map((photo, i) => (
-                <img
-                  key={i}
-                  src={photo.fileUrl}
-                  alt="Picture of the author"
-                  className="masonry-brick"
-                />
-              ))}
-            </Masonry>
-          </ResponsiveMasonry>
+          <div className="col-md-9">
+            <ResponsiveMasonry
+              columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
+            >
+              <Masonry>
+                {category.map((photo, i) => (
+                  <img
+                    key={i}
+                    src={photo.fileUrl}
+                    alt="Picture of the author"
+                    className="masonry-brick"
+                  />
+                ))}
+              </Masonry>
+            </ResponsiveMasonry>
+          </div>
         </div>
       </div>
-    </div>
+    </AuthRoute>
   );
 }
