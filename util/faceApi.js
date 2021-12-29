@@ -55,7 +55,7 @@ const verifyClientFace = async (imageUrl) => {
 //for each image, this is called
 const findMatchedFaces = async (clients, imageUrl) => {
   let clientPic = await fetchImage(imageUrl);
-  console.log("aa " + imageUrl);
+
   let faceDescriptions = await detectAllFaces(clientPic)
     .withFaceLandmarks()
     .withFaceDescriptors();

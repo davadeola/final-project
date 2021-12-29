@@ -1,6 +1,5 @@
 import styles from "../styles/Home.module.css";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import CategoryCard from "../components/CategoryCard";
 
 //firebase store
 import { db } from "../firebase/clientApp";
@@ -15,9 +14,12 @@ import AuthRoute from "../HOC/authRoute";
 export default function Albums() {
   const [category, setCategory] = useState([]);
   const [photos, setPhotos] = useState([]);
+  const [categoryName, setCategoryName] = useState("All");
 
   const AuthCtx = useContext(AuthContext);
   const currentUser = AuthCtx.currentUser;
+
+  const categories = ["All", "Wedding", "Sports", "Portrait", "Family"];
 
   const getPhotos = async () => {
     if (currentUser != null) {
@@ -38,14 +40,14 @@ export default function Albums() {
 
   const changeCategory = (category) => {
     var newItems;
-    if (category) {
+    if (category != "all") {
       newItems = photos.filter((photo) => {
         return photo.category == category;
       });
     } else {
       newItems = photos;
     }
-
+    setCategoryName(category);
     setCategory(newItems);
   };
 
@@ -59,48 +61,37 @@ export default function Albums() {
         <section className="row section">
           <div className="col-md-12">
             <h2>Albums</h2>
-            <p className="lead">Select an Event to view.</p>
+            <p className="lead">Your images have been sorted by category</p>
           </div>
         </section>
 
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md-12">
             <div className="d-flex flex-column bd-highlight mb-3 flex-wrap">
-              <div
-                className="p-2 bd-highlight"
-                onClick={() => changeCategory()}
-              >
-                <CategoryCard name="All" />
-              </div>
-              <div
-                className="p-2 bd-highlight"
-                onClick={() => changeCategory("sports")}
-              >
-                <CategoryCard name="Sports" />
-              </div>
-              <div
-                className="p-2 bd-highlight"
-                onClick={() => changeCategory("portrait")}
-              >
-                <CategoryCard name="Portrait" />
-              </div>
-              <div
-                className="p-2 bd-highlight"
-                onClick={() => changeCategory("wedding")}
-              >
-                <CategoryCard name="Wedding" />
-              </div>
-              <div
-                className="p-2 bd-highlight"
-                onClick={() => changeCategory("family")}
-              >
-                <CategoryCard name="Family" link="family" />
-              </div>
+              <ul className="nav nav-tabs nav-fill">
+                {categories.map((item, i) => (
+                  <li
+                    className="nav-item"
+                    key={i}
+                    onClick={() => changeCategory(item.toLowerCase())}
+                  >
+                    <a
+                      className={`nav-link ${
+                        categoryName == item.toLowerCase() && "active"
+                      }`}
+                    >
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
-          <div className="col-md-9">
+        </div>
+        <div className="row">
+          <div className="col-md-12">
             <ResponsiveMasonry
-              columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
+              columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 4 }}
             >
               <Masonry>
                 {category.map((photo, i) => (

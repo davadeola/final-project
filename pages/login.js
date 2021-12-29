@@ -1,18 +1,20 @@
 // Firebase related
 
-
-
 import styles from "../styles/Home.module.css";
 import GoogleSignIn from "../components/GoogleSignIn";
 
 export default function Login() {
-  
-
   return (
     <div className={styles.container}>
       <div className="container" style={{ width: "100vw" }}>
         <div className="row">
-          <div className="col-md-6"></div>
+          <div className="col-md-6">
+            <img
+              src="/images/login.jpeg"
+              alt="Login img"
+              style={{ width: "100%", height: "30em" }}
+            />
+          </div>
           <div
             className="col-md-6"
             style={{
@@ -23,9 +25,9 @@ export default function Login() {
               alignContent: "center",
             }}
           >
-            <h2>Login into your Account</h2>
+            <h1>Login into your Account</h1>
             <p className="lead">Step into your account to start.</p>
-            <GoogleSignIn/>
+            <GoogleSignIn />
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useContext, useState, useEffect } from "react";
 import UploadImage from "./UploadImage";
+import Modal from "react-modal";
 
 //firebase store
 import { db, storage } from "../firebase/clientApp";
@@ -15,6 +16,8 @@ export default function NewClientForm() {
   //setting local state
   const [files, setFiles] = useState([]);
   const [upload, setUpload] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isOpen, toggleOpen] = useState(false);
 
   useEffect(
     () => () => {
@@ -63,6 +66,8 @@ export default function NewClientForm() {
           updateDoc(doc(db, `clients`, emailAddress), {
             profilePhoto: downloadURL,
           }).then(() => {
+            toggleOpen(true);
+            setMessage("Added Your New Client");
             setUpload(false);
           });
         });
@@ -83,15 +88,31 @@ export default function NewClientForm() {
 
         submitProfileImage(data.emailAddress);
       } else {
+        toggleOpen(true);
+        setMessage("Choose a different picture. No face detected");
         console.log("Choose a different picture. No face detected");
       }
     } else {
+      toggleOpen(true);
+      setMessage("Please select a picture");
       console.log("Select a picture");
     }
   };
 
+  const closeModal = () => {
+    toggleOpen(false);
+  };
+
   return (
     <div style={{ padding: "0 10em 10em" }}>
+      <Modal isOpen={isOpen} className="my-modal" onRequestClose={closeModal}>
+        <h2
+          className="text-center"
+          style={{ position: "relative", marginTop: "15%" }}
+        >
+          {message}
+        </h2>
+      </Modal>
       <div className="col-md-12">
         <div className="text-center">
           {files.length > 0 ? (
@@ -153,3 +174,5 @@ export default function NewClientForm() {
     </div>
   );
 }
+
+Modal.setAppElement("#__next");

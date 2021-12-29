@@ -11,6 +11,7 @@ import {
   faDownload,
   faLongArrowAltLeft,
   faShare,
+  faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -112,7 +113,7 @@ function Profile({ photos, clientInfo }) {
                       <p>
                         Shot taken by <b>{selPhoto.photographer}</b>
                       </p>
-                      <h6>Select a category </h6>
+                      <h6>Change image's category </h6>
                       <div onChange={onChangeValue}>
                         {categories.map((item, i) => (
                           <AlbumRadio
@@ -137,13 +138,17 @@ function Profile({ photos, clientInfo }) {
               >
                 <Masonry>
                   {photos.map((photo, i) => (
-                    <img
-                      key={i}
-                      src={photo.fileUrl}
-                      alt={photo.fileName}
-                      className="masonry-brick"
-                      onClick={() => onPhotoClick(photo)}
-                    />
+                    <div key={i} className="masonry-brick">
+                      <FontAwesomeIcon
+                        icon={faTimesCircle}
+                        style={{ position: "absolute", right: 0, top: 0 }}
+                      />
+                      <img
+                        src={photo.fileUrl}
+                        alt={photo.fileName}
+                        onClick={() => onPhotoClick(photo)}
+                      />
+                    </div>
                   ))}
                 </Masonry>
               </ResponsiveMasonry>

@@ -72,17 +72,15 @@ export const Content = () => {
     "Content-Type": "application/json",
   };
 
-  const handleCategory = (imageUrl) => {
+  const handleCategory = async (imageUrl) => {
     let prediction = "";
     let data = { Url: imageUrl };
 
-    return axios.post(baseURL, data, { headers: headers }).then((res) => {
-      if (res.data.predictions[0].probability > 0.65) {
-        prediction = res.data.predictions[0].tagName;
-      }
-
-      return prediction;
-    });
+    const res = await axios.post(baseURL, data, { headers: headers });
+    if (res.data.predictions[0].probability > 0.55) {
+      prediction = res.data.predictions[0].tagName;
+    }
+    return prediction;
   };
 
   // const handleCategory = async (src) => {
@@ -97,22 +95,34 @@ export const Content = () => {
   //   img.width = imgWidth;
   //   img.height = imgHeight;
 
-  //   const example = tf.browser.fromPixels(img);
-  //   const newImage = tf.cast(
-  //     tf.image.resizeBilinear(example, [imgWidth, imgHeight]),
-  //     "float32"
-  //   );
-  //   const norm = tf.fill([imgWidth, imgHeight, 1], 255);
-  //   const normalisedImage = tf.div(newImage, norm);
-  //   const predictme = tf.cast(tf.expandDims(normalisedImage), "float32");
+  //   // const example = tf.browser.fromPixels(img);
+  //   // const newImage = tf.cast(
+  //   //   tf.image.resizeBilinear(example, [imgWidth, imgHeight]),
+  //   //   "float32"
+  //   // );
+  //   // const norm = tf.fill([imgWidth, imgHeight, 1], 255);
+  //   // const normalisedImage = tf.div(newImage, norm);
+  //   // const predictme = tf.cast(tf.expandDims(normalisedImage), "float32");
 
-  //   // var tensorImg = tf.browser
-  //   //   .fromPixels(img)
-  //   //   .resizeNearestNeighbor([imgWidth, imgHeight])
-  //   //   .toFloat()
-  //   //   .expandDims();
+  //   var tensorImg = tf.browser
+  //     .fromPixels(img)
+  //     .resizeNearestNeighbor([imgWidth, imgHeight])
+  //     .toFloat()
+  //     .expandDims();
 
-  //   const prediction = model.predict(predictme);
+  //   //convert the image data to a tensor
+  //   let tensor = tf.browser.fromPixels(img);
+  //   //resize to 28 x 28
+  //   const resized = tf.image
+  //     .resizeBilinear(tensor, [imgWidth, imgHeight])
+  //     .toFloat();
+  //   // Normalize the image
+  //   const offset = tf.scalar(255.0);
+  //   const normalized = tf.scalar(1.0).sub(resized.div(offset));
+  //   //We add a dimension to get a batch shape
+  //   const batched = normalized.expandDims(0);
+
+  //   const prediction = model.predict(batched);
   //   const classificationData = await prediction.dataSync();
   //   prediction.dispose();
 
@@ -151,7 +161,7 @@ export const Content = () => {
             changeImageField(index, "downloadURL", downloadURL);
             changeImageField(index, "status", "FINISH");
 
-            //handleCategory(downloadURL);
+            // handleCategory(downloadURL);
 
             handleCategory(downloadURL).then((res) => {
               setDoc(doc(db, `photos`, image.fileName), {
@@ -202,7 +212,7 @@ export const Content = () => {
                 <div className="d-flex justify-content-center">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    style={{ width: "5em", height: "5 em" }}
+                    style={{ width: "5em", height: "5em" }}
                   />
                 </div>
               ) : (
