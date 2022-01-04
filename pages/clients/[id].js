@@ -1,8 +1,6 @@
-import EventSelection from "../../components/EventSelection";
 import Link from "next/link";
 
 import styles from "../../styles/Home.module.css";
-import Modal from "react-modal";
 
 //firebase store
 import { db } from "../../firebase/clientApp";
@@ -21,27 +19,10 @@ import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import AlbumRadio from "../../components/AlbumRadio";
+
 import AuthRoute from "../../HOC/authRoute";
 
 function Profile({ photos, clientInfo }) {
-  const [selPhoto, setSelPhoto] = useState();
-  const [isOpen, toggleOpen] = useState(false);
-  const categories = ["Wedding", "Sports", "Portrait", "Family"];
-
-  const onPhotoClick = (photo) => {
-    setSelPhoto(photo);
-    toggleOpen(true);
-  };
-
-  const closeModal = () => {
-    toggleOpen(false);
-  };
-
-  const onChangeValue = (event) => {
-    console.log(event.target.value);
-  };
-
   return (
     <AuthRoute>
       <div className={`container ${styles.container}`}>
@@ -88,51 +69,6 @@ function Profile({ photos, clientInfo }) {
 
           <div className="row">
             <div className="col-md-12">
-              {selPhoto && isOpen && (
-                <Modal
-                  isOpen={isOpen}
-                  onRequestClose={closeModal}
-                  className="my-modal"
-                >
-                  <div className="row " style={{ height: "25em" }}>
-                    <div className="col-md-6 d-flex align-content-center">
-                      <div className="d-flex">
-                        <img
-                          src={selPhoto.fileUrl}
-                          style={{
-                            justifyContent: "center",
-                            width: "100%",
-                            maxHeight: "40em",
-                          }}
-                          className="align-self-center"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6" style={{ padding: "2em" }}>
-                      <div className="d-flex flex-column justify-content-between"></div>
-                      <p>
-                        Shot taken by <b>{selPhoto.photographer}</b>
-                      </p>
-                      <h6>Change image's category </h6>
-                      <div onChange={onChangeValue}>
-                        {categories.map((item, i) => (
-                          <AlbumRadio
-                            key={i}
-                            album={item}
-                            index={i}
-                            selCategory={selPhoto.category}
-                          />
-                        ))}
-                      </div>
-
-                      <div className="d-flex  justify-content-end">
-                        <FontAwesomeIcon icon={faDownload}></FontAwesomeIcon>
-                      </div>
-                    </div>
-                  </div>
-                </Modal>
-              )}
-
               <ResponsiveMasonry
                 columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 4 }}
               >
@@ -143,11 +79,7 @@ function Profile({ photos, clientInfo }) {
                         icon={faTimesCircle}
                         style={{ position: "absolute", right: 0, top: 0 }}
                       />
-                      <img
-                        src={photo.fileUrl}
-                        alt={photo.fileName}
-                        onClick={() => onPhotoClick(photo)}
-                      />
+                      <img src={photo.fileUrl} alt={photo.fileName} />
                     </div>
                   ))}
                 </Masonry>
@@ -201,6 +133,5 @@ export const getServerSideProps = async ({ params }) => {
     },
   };
 };
-Modal.setAppElement("#__next");
 
 export default Profile;
