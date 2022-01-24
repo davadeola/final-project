@@ -113,6 +113,9 @@ a {
 
 .masonry-brick img {
   width: 100%;
+}
+
+.masonry-brick svg {
   cursor: pointer;
 }
 

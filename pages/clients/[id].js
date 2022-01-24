@@ -4,7 +4,15 @@ import styles from "../../styles/Home.module.css";
 
 //firebase store
 import { db } from "../../firebase/clientApp";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+  arrayRemove,
+} from "firebase/firestore";
 import {
   faDownload,
   faLongArrowAltLeft,
@@ -23,6 +31,14 @@ import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import AuthRoute from "../../HOC/authRoute";
 
 function Profile({ photos, clientInfo }) {
+  const onDeletePhoto = (fileName) => {
+    updateDoc(doc(db, `photos`, fileName), {
+      clients: arrayRemove(clientInfo.emailAddress),
+    }).then(() => {
+      console.log("updated");
+    });
+  };
+
   return (
     <AuthRoute>
       <div className={`container ${styles.container}`}>
@@ -78,6 +94,9 @@ function Profile({ photos, clientInfo }) {
                       <FontAwesomeIcon
                         icon={faTimesCircle}
                         style={{ position: "absolute", right: 0, top: 0 }}
+                        onClick={() => {
+                          onDeletePhoto(photo.fileName);
+                        }}
                       />
                       <img src={photo.fileUrl} alt={photo.fileName} />
                     </div>
